@@ -1,0 +1,152 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card shadow-lg" style="border-radius: 0">
+        <div class="card-header font-weight-bolder text-uppercase text-center text-white bg-dark ">
+          Les Villes
+        </div>
+        <div class="card-body text-center px-1">
+          <div *ngIf="villes" class="list-group">
+            <div
+              *ngFor="let v of villes._embedded.villes"
+              (click)="onGetCinemas(v)"
+              [ngClass]="v==currentVille?' btn  btn-info font-weight-bolder m-1 ':'btn  btn-outline-info m-1 '"
+            >
+              <div class="row justify-content-between  m-auto">
+                {{v.name}}<i class="fa fa-arrow-right  my-auto" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="col-md-8">
+
+      <ul *ngIf="cinemas && cinemas._embedded" class="nav nav-pills nav-fill">
+        <li
+          *ngFor="let c of cinemas._embedded.cinemas"
+          [ngClass]="c==currentCinema?'nav-item nav-link btn btn-info m-1 text-white font-weight-bold':'nav-item nav-link btn btn-outline-info m-1'"
+          (click)="onGetSalles(c)">
+          {{c.name}}
+        </li>
+      </ul>
+      <div class="row" *ngIf="salles">
+        <div *ngFor="let s of salles._embedded.salles;let i = index" class="col-md-6 mt-4">
+          <div class="card shadow ">
+            <div class="card-header font-weight-bold text-uppercase text-center text-white bg-dark">
+              {{s.name}}
+            </div>
+            <div class=" text-center  py-3 px-2" *ngIf="s.projections">
+              <!--image-->
+              <img src="{{CinemaService.host+'/imageFilm/'+s.projections._embedded.projections[0].film.id}}"
+                   style="width: 100%;object-fit: cover;">
+              <!--info-->
+              <div class="accordion" id="accordionExample">
+
+                <div class="card">
+                  <div class="row col-md-12 justify-content-around mx-0 px-0 my-3">
+                    <!--planning button-->
+                    <button class="btn  btn-info text-center  mx-0 col-md-11 my-1 " data-toggle="collapse"
+                            [attr.data-target]="'#planning' + i+1">
+                      Planning
+                    </button>
+                  </div>
+
+
+                  <!--Planning body-->
+                  <div id="{{'planning'+ i+1}}" class="collapse " aria-labelledby="headingOne"
+                       data-parent="#accordionExample">
+                    <div class="card-body">
+                      <ul class="list-group ">
+                        <li class="list-group-item list-group-item-action clickable"
+                            *ngFor="let p of s.projections._embedded.projections">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <i class="fa fa-calendar" aria-hidden="true"></i>
+                              {{p.seance.heureDebut}}
+                            </div>
+                            <div class="col-md-4">
+                              <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                              {{p.prix|number:'0.00'}} MAD
+                            </div>
+                            <!--ticket button-->
+                            <div class="col-md-4 ">
+
+                              <div class="btn btn-outline-info" (click)="onGetTicketPlaces(p)" data-toggle="modal"
+                                   data-target="#ticketsModal">
+                                <i class="fa fa-ticket  my-auto " aria-hidden="true"></i>
+                                <span class="float-right ">Tickets</span>
+                              </div>
+                            </div>
+
+
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="ticketsModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header bg-dark text-white font-weight-bold">
+                          <h5 class="modal-title ticket-modal-title my-auto">Tickets</h5>
+                          <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+
+                          <!--tickets body-->
+                          <div class="card "
+                               *ngIf="currentProjection && currentProjection.tickets && currentProjection.tickets._embedded ">
+                            <div class="card-body">
+                              <button (click)="onSelectTicket(t)" class="{{getTicketClass(t)}}" [disabled]="t.reserve"
+                                      *ngFor="let t of currentProjection.tickets._embedded.tickets">
+                                {{t.place.numero}}
+                              </button>
+                            </div>
+                            <div class="card-footer" *ngIf="selectedTickets.length>0">
+
+
+                              <form #f="ngForm" (ngSubmit)="onPayTickets(f.value)">
+                                <div class="form-group">
+                                  <label class="text-uppercase font-weight-bold text-info">Nom complet </label>
+                                  <input class="form-control" name="nomClient"  ngModel>
+                                </div>
+                                <div class="form-group">
+                                  <label class="text-uppercase font-weight-bold text-info" >Code de Paiement</label>
+                                  <input class="form-control"  name="codePayement"  ngModel  >
+                                </div>
+                                <button class="btn btn-block btn-info" type="submit">
+                                  Get Tickets
+                                </button>
+                              </form>
+
+                            </div>
+                          </div>
+                          <!--end of tickets body-->
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+              <!--end info-->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

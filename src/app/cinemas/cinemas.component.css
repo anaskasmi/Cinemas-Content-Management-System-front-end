@@ -1,0 +1,10 @@
+.clickable{
+  cursor: pointer !important;
+}
+.ticket-modal-title{
+  font-size: large !important;
+  text-align: center;
+  font-weight: bold;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+}

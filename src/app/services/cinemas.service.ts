@@ -6,7 +6,7 @@ import {HttpClient} from "@angular/common/http";
 })
 export class CinemasService {
 
-  public host:string = "http://localhost:8383";
+  public host:string = "http://199.192.21.20:8383";
   constructor(private http:HttpClient) {
 
   }

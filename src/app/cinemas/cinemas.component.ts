@@ -108,12 +108,13 @@ export class CinemasComponent implements OnInit {
 
     this.CinemaService.payerTickets(dataForm)
       .subscribe(data => {
-        this.onGetTicketPlaces(this.currentProjection);
         Swal.fire(
           'Success',
           'Tickets added to your account successfully !',
           'success'
-        )
+        );
+        this.onGetTicketPlaces(this.currentProjection);
+
       }, error => {
         Swal.fire(
           'error',
